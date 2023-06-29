@@ -1,6 +1,8 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 // Simple dungeon structure. Contains player position and layout of rooms + walls
 type dungeon struct {
@@ -30,7 +32,8 @@ func initDungeon(c int, r int) dungeon {
  */
 
 func genRooms(rows int, cols int) [][]rune {
-	// Create slice
+	// Create dungeon representation (slice)
+
 	newRooms := make([][]rune, rows)
 	for c := range newRooms {
 		newRooms[c] = make([]rune, cols)
@@ -44,16 +47,98 @@ func genRooms(rows int, cols int) [][]rune {
 	// Carve out rooms
 
 	// Choose start and end point
-	startX := rand.Intn(4 - 0 + 1)
-	startY := rand.Intn(4 - 0 + 1)
-	endX := rand.Intn(4 - 0 + 1)
-	endY := rand.Intn(4 - 0 + 1)
+
+	var startX int = rand.Intn((rows - 1) - 0 + 1)
+	var startY int = rand.Intn((cols - 1) - 0 + 1)
+	var endX int = rand.Intn((rows - 1) - 0 + 1)
+	var endY int = rand.Intn((cols - 1) - 0 + 1)
+	// Make sure start and end are not the same
+
 	for endX == startX {
-		endX = rand.Intn(4 - 0 + 1)
+		endX = rand.Intn((rows - 1) - 0 + 1)
 	}
 	for endY == startY {
-		endY = rand.Intn(4 - 0 + 1)
+		endY = rand.Intn((cols - 1) - 0 + 1)
 	}
+	// Set start and end points
+
+	newRooms[startX][startY] = '.'
+	newRooms[endX][endY] = '.'
+	var X int = startX
+	var Y int = startY
+	// Begin carving
+
+	switch X > endX {
+	case true:
+		for X > endX {
+			newRooms[X][Y] = '.'
+			X--
+		}
+	case false:
+		for X < endX {
+			newRooms[X][Y] = '.'
+			X++
+		}
+	}
+	switch Y > endY {
+	case true:
+		for Y > endY {
+			newRooms[X][Y] = '.'
+			Y--
+		}
+	case false:
+		for Y < endY {
+			newRooms[X][Y] = '.'
+			Y++
+		}
+	}
+	// Carve Full dungeon
+	for i := 0; i < cols; i++ {
+		X = rand.Intn((rows - 1) - 0 + 1)
+		Y = rand.Intn((cols - 1) - 0 + 1)
+		for newRooms[X][Y] == '.' {
+			X = rand.Intn((rows - 1) - 0 + 1)
+			Y = rand.Intn((cols - 1) - 0 + 1)
+		}
+		endX = rand.Intn((rows - 1) - 0 + 1)
+		endY = rand.Intn((cols - 1) - 0 + 1)
+		for newRooms[endX][endY] == '#' {
+			endX = rand.Intn((rows - 1) - 0 + 1)
+			endY = rand.Intn((cols - 1) - 0 + 1)
+		}
+
+		switch X > endX {
+
+		case true:
+			for X > endX {
+				newRooms[X][Y] = '.'
+				X--
+			}
+
+		case false:
+			for X < endX {
+				newRooms[X][Y] = '.'
+				X++
+			}
+		}
+
+		switch Y > endY {
+
+		case true:
+			for Y > endY {
+				newRooms[X][Y] = '.'
+				Y--
+			}
+
+		case false:
+			for Y < endY {
+				newRooms[X][Y] = '.'
+				Y++
+			}
+		}
+	}
+
+	// Return created dungeon
 
 	return newRooms
 }
