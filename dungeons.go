@@ -6,11 +6,9 @@ import (
 
 // Simple dungeon structure. Contains player position and layout of rooms + walls
 type dungeon struct {
-	columns int
-	rows    int
-	x       int
-	y       int
-	rooms   [][]rune
+	columns int      // number of rows a dungeon has
+	rows    int      // number of columns a dungeon has
+	rooms   [][]rune // all rooms/spaces in a dungeon
 }
 
 // Initialise dungeon structure
@@ -18,8 +16,6 @@ func initDungeon(c int, r int) dungeon {
 	d := dungeon{
 		columns: c,
 		rows:    r,
-		x:       0,
-		y:       0,
 		rooms:   genRooms(c, r),
 	}
 	return d
@@ -48,8 +44,8 @@ func genRooms(rows int, cols int) [][]rune {
 
 	// Choose start and end point
 
-	var startX int = rand.Intn((rows - 1) - 0 + 1)
-	var startY int = rand.Intn((cols - 1) - 0 + 1)
+	var startX int = rows / 2
+	var startY int = cols / 2
 	var endX int = rand.Intn((rows - 1) - 0 + 1)
 	var endY int = rand.Intn((cols - 1) - 0 + 1)
 	// Make sure start and end are not the same
